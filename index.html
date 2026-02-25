@@ -30,9 +30,10 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
-        height: 100vh;
+        min-height: 100vh;
         font-family: "Segoe UI", sans-serif;
         overflow: hidden;
+        padding: 20px;
       }
 
       /* --- JUEGO --- */
@@ -40,13 +41,16 @@
         text-align: center;
         z-index: 20000;
         transition: all 0.5s ease;
+        width: 100%;
+        max-width: 500px;
       }
 
       #game-container h1 {
         font-family: "Marck Script", cursive;
-        font-size: 3.5rem;
+        font-size: clamp(2rem, 8vw, 3.5rem);
         color: var(--txt-color);
         margin-bottom: 30px;
+        line-height: 1.2;
       }
 
       .buttons {
@@ -54,16 +58,18 @@
         justify-content: center;
         gap: 20px;
         min-height: 100px;
+        flex-wrap: wrap;
       }
 
       .btn {
         padding: 15px 35px;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         border: none;
         border-radius: 50px;
         cursor: pointer;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         font-weight: bold;
+        transition: transform 0.2s;
       }
 
       #btn-yes { background-color: var(--pink-btn); color: white; }
@@ -76,11 +82,12 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+        max-width: 400px;
         transition: opacity 0.5s;
       }
 
       .container {
-        width: 400px;
+        width: 100%;
         position: relative;
         margin-top: 50px;
       }
@@ -94,8 +101,8 @@
 
       .envelope {
         position: relative;
-        width: 400px;
-        height: 280px;
+        width: 100%;
+        height: 230px; /* Un poco más bajo para móviles */
       }
 
       .envelope::before {
@@ -105,12 +112,20 @@
         left: 0;
         right: 0;
         z-index: 4;
-        border-top: 160px solid var(--envelope-tab);
+        border-top: 130px solid var(--envelope-tab);
         border-right: 200px solid transparent;
         border-left: 200px solid transparent;
         transform-origin: top;
         transition: all 0.5s ease-in-out;
         border-radius: 10px;
+      }
+
+      /* Ajuste dinámico de los bordes del sobre */
+      @media (max-width: 450px) {
+        .envelope::before {
+            border-right-width: 175px;
+            border-left-width: 175px;
+        }
       }
 
       .tap-left, .tap-right {
@@ -128,9 +143,9 @@
       .letter {
         position: absolute;
         bottom: 10px;
-        left: 10px;
-        width: 380px;
-        height: 80%; /* Altura inicial dentro del sobre */
+        left: 5%;
+        width: 90%;
+        height: 80%;
         background: var(--primary);
         padding: 15px;
         border-radius: 10px;
@@ -143,14 +158,15 @@
         font-family: "Gill Sans", sans-serif;
         color: var(--txt-color);
         text-align: center;
-        font-size: 15px;
+        font-size: clamp(12px, 3.5vw, 15px);
         border: 2px dotted var(--txt-color);
-        padding: 15px;
+        padding: 10px;
         height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        overflow-y: auto; /* Scroll interno por si el texto es muy largo */
+        overflow-y: auto;
+        line-height: 1.3;
       }
 
       .heart {
@@ -176,23 +192,30 @@
       .heart:before { top: -15px; }
       .heart:after { left: -15px; }
 
-      /* ANIMACIONES CORREGIDAS */
+      /* ANIMACIONES */
       .envelope-wrapper.flap .envelope::before {
         transform: rotateX(180deg);
         z-index: 0;
       }
 
       .envelope-wrapper.flap .heart {
-        transform: translate(-50%, -180px) rotate(45deg);
+        transform: translate(-50%, -150px) rotate(45deg);
       }
 
-      /* Cuando se abre, sube mucho más y se ajusta al texto */
+      /* Ajuste de subida de la carta según pantalla */
       .letter.opened {
-        transform: translateY(-100px); /* Sube lo suficiente */
+        transform: translateY(-180px); 
         height: auto;
-        min-height: 350px;
+        min-height: 280px;
         z-index: 100;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+
+      @media (max-width: 450px) {
+        .letter.opened {
+            transform: translateY(-160px);
+            min-height: 300px;
+        }
       }
 
       .heart-fall {
@@ -202,17 +225,11 @@
         animation: fall linear forwards;
       }
       @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-
-      @media screen and (max-width: 450px) {
-        .container, .envelope { width: 320px; }
-        .letter { width: 300px; }
-        .letter.opened { transform: translateY(-320px); }
-      }
     </style>
   </head>
   <body>
     <div id="game-container">
-      <h1>¿Quieres salir conmigo y me permites seguir conociendote? 😊</h1>
+      <h1>¿Quieres salir conmigo y me permites seguir conociéndote? 😊</h1>
       <div class="buttons">
         <button id="btn-yes" class="btn">¡SÍ! ❤️</button>
         <button id="btn-no" class="btn">No</button>
@@ -220,7 +237,7 @@
     </div>
 
     <div id="letter-container">
-      <h1 style="font-size: 35px; margin-bottom: 30px; text-align: center; font-family: 'Marck Script', cursive;">
+      <h1 style="font-size: clamp(24px, 7vw, 35px); margin-bottom: 20px; text-align: center; font-family: 'Marck Script', cursive; color: #c9184a;">
         ¡Sabía que dirías que sí! ✨
       </h1>
       <div class="container">
@@ -231,23 +248,11 @@
             <div class="heart"></div>
             <div class="letter">
               <div class="text">
-                <strong style="font-size: 1.2rem; margin-bottom: 10px;">¡Hola Alison Mishell!</strong>
-                <p style="margin-bottom: 10px;">
-                  Me encanta cada momento que pasamos hablando y la forma en la
-                  que te voy conociendo. ✨
-                </p>
-                <p style="margin-bottom: 10px">
-                  Eres una persona hermosa, pero lo que más me fascina de ti es
-                  lo <b>dedicada, estudiosa y trabajadora</b> que eres. Es
-                  increíble ver cómo te esfuerzas por tus metas; nunca dejes de
-                  ser así.
-                </p>
-                <p style="margin-bottom: 10px">
-                  Me haría mucha ilusión pasar un rato contigo fuera de las
-                  pantallas y, aunque nos estamos conociendo, quiero que sepas
-                  que siempre estaré aquí para apoyarte en todo lo que hagas.
-                </p>
-                <p style="font-weight: bold; color: #ff477e;">¿Qué dices? ✨🌹</p>
+                <strong style="font-size: 1.1rem; margin-bottom: 8px;">¡Hola Alison Mishell!</strong>
+                <p>Me encanta cada momento que pasamos hablando y la forma en la que te voy conociendo. ✨</p>
+                <p style="margin: 8px 0;">Eres una persona hermosa, pero lo que más me fascina es lo <b>dedicada, estudiosa y trabajadora</b> que eres.</p>
+                <p>Me haría mucha ilusión pasar un rato contigo fuera de las pantallas. Siempre estaré aquí para apoyarte.</p>
+                <p style="font-weight: bold; color: #ff477e; margin-top: 8px;">¿Qué dices? ✨🌹</p>
               </div>
             </div>
           </div>
@@ -263,13 +268,20 @@
       const envelopeWrapper = document.querySelector(".envelope-wrapper");
       const letter = document.querySelector(".letter");
 
-      btnNo.addEventListener("mouseover", () => {
+      // Botón NO que huye
+      btnNo.addEventListener("mouseover", moveButton);
+      btnNo.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          moveButton();
+      });
+
+      function moveButton() {
         const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
         const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
-        btnNo.style.position = "absolute";
+        btnNo.style.position = "fixed";
         btnNo.style.left = x + "px";
         btnNo.style.top = y + "px";
-      });
+      }
 
       btnYes.addEventListener("click", () => {
         gameContainer.style.opacity = "0";
@@ -285,14 +297,10 @@
         if (e.target.closest(".heart") || e.target.closest(".envelope")) {
           if (!envelopeWrapper.classList.contains("flap")) {
             envelopeWrapper.classList.add("flap");
-            setTimeout(() => {
-              letter.classList.add("opened");
-            }, 600);
+            setTimeout(() => { letter.classList.add("opened"); }, 600);
           } else {
             letter.classList.remove("opened");
-            setTimeout(() => {
-              envelopeWrapper.classList.remove("flap");
-            }, 500);
+            setTimeout(() => { envelopeWrapper.classList.remove("flap"); }, 500);
           }
         }
       });
