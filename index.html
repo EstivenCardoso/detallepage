@@ -1,315 +1,373 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Para Alison Mishell ✨</title>
     <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        :root {
-            --bg-color: #ffebf2;
-            --bg-envelope-color: #ffe3ed;
-            --envelope-tab: #ffccd5;
-            --envelope-cover: #ffc1d1;
-            --txt-color: #c9184a;
-            --heart-color: #ff477e;
-            --pink-btn: #ff4d6d;
-        }
+      :root {
+        --primary: #fff;
+        --bg-color: #ffebf2;
+        --bg-envelope-color: #ffe3ed;
+        --envelope-tab: #ffccd5;
+        --envelope-cover: #ffc1d1;
+        --shadow-color: rgba(0, 0, 0, 0.2);
+        --txt-color: #c9184a;
+        --heart-color: #ff477e;
+        --pink-btn: #ff4d6d;
+      }
+
+      body {
+        background: var(--bg-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+        overflow-x: hidden;
+      }
+
+      #game-container {
+        text-align: center;
+        z-index: 20000;
+        transition: all 0.5s ease;
+      }
+
+      #game-container h1 {
+        font-family: "Marck Script", cursive;
+        font-size: 3.5rem;
+        color: var(--txt-color);
+        margin-bottom: 30px;
+      }
+
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        min-height: 100px;
+      }
+
+      .btn {
+        padding: 15px 35px;
+        font-size: 1.3rem;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+      }
+
+      #btn-yes { background-color: var(--pink-btn); color: white; }
+      #btn-no { background-color: #adb5bd; color: white; position: relative; }
+
+      #letter-container {
+        display: none;
+        opacity: 0;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        transition: opacity 0.5s;
+      }
+
+      .container {
+        width: 400px;
+        position: relative;
+        margin-top: 50px;
+      }
+
+      .envelope-wrapper {
+        position: relative;
+        background-color: var(--bg-envelope-color);
+        box-shadow: 0 0 40px var(--shadow-color);
+        border-radius: 15px;
+      }
+
+      .envelope {
+        position: relative;
+        width: 400px;
+        height: 280px;
+      }
+
+      .envelope::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 4;
+        border-top: 160px solid var(--envelope-tab);
+        border-right: 200px solid transparent;
+        border-left: 200px solid transparent;
+        transform-origin: top;
+        transition: all 0.5s ease-in-out;
+        border-radius: 10px;
+      }
+
+      .tap-left, .tap-right {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--envelope-cover);
+        z-index: 3;
+        border-radius: 10px;
+      }
+
+      .tap-left { clip-path: polygon(0 0, 0% 100%, 100% 100%); }
+      .tap-right { clip-path: polygon(100% 0, 0 100%, 100% 100%); }
+
+      .letter {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        width: 380px;
+        height: 80%;
+        background: var(--primary);
+        padding: 15px;
+        border-radius: 10px;
+        transition: all 0.7s ease-in-out;
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      .letter .text {
+        font-family: "Gill Sans", sans-serif;
+        color: var(--txt-color);
+        text-align: center;
+        font-size: 15px;
+        border: 2px dotted var(--txt-color);
+        padding: 15px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow-y: auto;
+      }
+
+      .messenger-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 12px 25px;
+        background: linear-gradient(135deg, #ff4d6d, #ff758f);
+        color: white;
+        text-decoration: none;
+        border-radius: 30px;
+        font-weight: bold;
+        font-size: 14px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+      }
+
+      .messenger-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      }
+
+      .heart {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 30px;
+        height: 30px;
+        background: var(--heart-color);
+        transform: translate(-50%, -20%) rotate(45deg);
+        transition: transform 0.5s ease-in-out;
+        z-index: 10;
+        cursor: pointer;
+      }
+
+      .heart:before, .heart:after {
+        content: "";
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        background-color: var(--heart-color);
+        border-radius: 50%;
+      }
+
+      .heart:before { top: -15px; }
+      .heart:after { left: -15px; }
+
+      .envelope-wrapper.flap .envelope::before {
+        transform: rotateX(180deg);
+        z-index: 0;
+      }
+
+      .envelope-wrapper.flap .heart {
+        transform: translate(-50%, -180px) rotate(45deg);
+      }
+
+      .letter.opened {
+        transform: translateY(-100px);
+        height: auto;
+        min-height: 350px;
+        z-index: 100;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      }
+
+      .heart-fall {
+        position: absolute;
+        top: -10%;
+        color: var(--heart-color);
+        animation: fall linear forwards;
+      }
+
+      @keyframes fall {
+        to { transform: translateY(110vh) rotate(360deg); }
+      }
+
+      /* ----------- RESPONSIVE ----------- */
+      @media screen and (max-width: 450px) {
 
         body {
-            background: var(--bg-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            font-family: "Segoe UI", sans-serif;
-            overflow: hidden;
-            padding: 15px;
-        }
-
-        /* --- JUEGO INICIAL --- */
-        #game-container {
-            text-align: center;
-            z-index: 2000;
-            transition: all 0.5s ease;
-            width: 100%;
-            max-width: 500px;
+          height: auto;
+          padding: 20px 0;
         }
 
         #game-container h1 {
-            font-family: "Marck Script", cursive;
-            font-size: clamp(1.8rem, 8vw, 3rem);
-            color: var(--txt-color);
-            margin-bottom: 30px;
+          font-size: 2rem;
+          padding: 0 15px;
         }
 
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        #btn-yes { background: var(--pink-btn); color: white; }
-        #btn-no { background: #adb5bd; color: white; position: relative; }
-
-        /* --- CONTENEDOR DE LA CARTA --- */
-        #letter-container {
-            display: none;
-            opacity: 0;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            max-width: 400px;
-            transition: opacity 0.5s;
-        }
-
-        .title-after {
-            font-family: "Marck Script", cursive;
-            font-size: clamp(1.5rem, 6vw, 2.2rem);
-            color: var(--txt-color);
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }
-
-        /* --- EL SOBRE RESPONSIVO --- */
-        .container {
-            width: 100%;
-            max-width: 350px;
-            position: relative;
-            margin-top: 20px;
-        }
-
-        .envelope-wrapper {
-            position: relative;
-            background: var(--bg-envelope-color);
-            border-radius: 0 0 10px 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
+        .container,
         .envelope {
-            position: relative;
-            width: 100%;
-            height: 220px;
+          width: 300px;
         }
 
-        /* Triángulo superior del sobre */
-        .envelope::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            z-index: 4;
-            border-top: 110px solid var(--envelope-tab);
-            border-right: 175px solid transparent;
-            border-left: 175px solid transparent;
-            transform-origin: top;
-            transition: all 0.5s ease-in-out;
-        }
-
-        /* Ajuste de los bordes del sobre para que no se rompa */
-        @media (max-width: 370px) {
-            .envelope::before {
-                border-right-width: 155px;
-                border-left-width: 155px;
-            }
-        }
-
-        .tap-left, .tap-right {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--envelope-cover);
-            z-index: 3;
-        }
-        .tap-left { clip-path: polygon(0 0, 0 100%, 100% 100%); border-radius: 0 0 0 10px; }
-        .tap-right { clip-path: polygon(100% 0, 0 100%, 100% 100%); border-radius: 0 0 10px 0; }
-
-        /* --- LA CARTA --- */
         .letter {
-            position: absolute;
-            bottom: 5px;
-            left: 5%;
-            width: 90%;
-            height: 90%;
-            background: white;
-            border-radius: 8px;
-            z-index: 2;
-            transition: all 0.7s ease-in-out;
-            padding: 10px;
+          width: 280px;
+          padding: 10px;
         }
 
         .letter .text {
-            font-family: "Segoe UI", sans-serif;
-            color: var(--txt-color);
-            font-size: clamp(0.85rem, 3.5vw, 1rem);
-            line-height: 1.4;
-            border: 2px dotted var(--envelope-tab);
-            padding: 10px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            overflow-y: auto;
-        }
-
-        .heart {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 30px;
-            height: 30px;
-            background: var(--heart-color);
-            transform: translate(-50%, -50%) rotate(45deg);
-            z-index: 10;
-            cursor: pointer;
-            transition: all 0.5s ease-in-out;
-        }
-        .heart::before, .heart::after {
-            content: "";
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: var(--heart-color);
-            border-radius: 50%;
-        }
-        .heart::before { top: -15px; }
-        .heart::after { left: -15px; }
-
-        /* --- ANIMACIÓN DE APERTURA --- */
-        .envelope-wrapper.flap .envelope::before {
-            transform: rotateX(180deg);
-            z-index: 0;
-        }
-
-        .envelope-wrapper.flap .heart {
-            transform: translate(-50%, -150px) rotate(45deg);
-            opacity: 0.5;
+          font-size: 14px;
+          padding: 10px;
         }
 
         .letter.opened {
-            transform: translateY(-130px); /* Sube sin salirse de la pantalla */
-            height: 110%; /* Se agranda para mostrar el texto */
-            z-index: 5;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+          transform: translateY(-180px);
+          min-height: auto;
         }
 
-        .heart-fall {
-            position: absolute;
-            top: -10%;
-            color: var(--heart-color);
-            animation: fall linear forwards;
-            z-index: 1000;
-        }
-        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+      }
+
     </style>
-</head>
-<body>
+  </head>
+
+  <body>
 
     <div id="game-container">
-        <h1>¿Quieres salir conmigo y me permites seguir conociéndote? 😊</h1>
-        <div class="buttons">
-            <button id="btn-yes" class="btn">¡SÍ! ❤️</button>
-            <button id="btn-no" class="btn">No</button>
-        </div>
+      <h1>¿Quieres salir conmigo y me permites seguir conociendote? 😊</h1>
+      <div class="buttons">
+        <button id="btn-yes" class="btn">¡SÍ! ❤️</button>
+        <button id="btn-no" class="btn">No</button>
+      </div>
     </div>
 
     <div id="letter-container">
-        <h1 class="title-after">¡Sabía que dirías que sí! ✨</h1>
-        <div class="container">
-            <div class="envelope-wrapper">
-                <div class="envelope">
-                    <div class="tap-left"></div>
-                    <div class="tap-right"></div>
-                    <div class="heart"></div>
-                    <div class="letter">
-                        <div class="text">
-                            <strong>¡Hola Alison Mishell!</strong>
-                            <p style="margin-top: 5px;">Me encanta cada momento que pasamos hablando y la forma en la que te voy conociendo. ✨</p>
-                            <p style="margin-top: 5px;">Eres hermosa, pero lo que más me fascina es lo <b>dedicada, estudiosa y trabajadora</b> que eres.</p>
-                            <p style="margin-top: 5px;">Me haría mucha ilusión pasar un rato contigo fuera de las pantallas. 🌹</p>
-                            <p style="font-weight: bold; margin-top: 5px; color: #ff477e;">¿Qué dices?</p>
-                        </div>
-                    </div>
-                </div>
+      <h1 style="font-size: 35px; margin-bottom: 30px; text-align: center; font-family: 'Marck Script', cursive;">
+        ¡Sabía que dirías que sí! ✨
+      </h1>
+
+      <div class="container">
+        <div class="envelope-wrapper">
+          <div class="envelope">
+            <div class="tap-left"></div>
+            <div class="tap-right"></div>
+            <div class="heart"></div>
+
+            <div class="letter">
+              <div class="text">
+                <strong style="font-size: 1.2rem; margin-bottom: 10px;">¡Hola Alison Mishell!</strong>
+
+                <p style="margin-bottom: 10px;">
+                  Me encanta cada momento que pasamos hablando y la forma en la
+                  que te voy conociendo. ✨
+                </p>
+
+                <p style="margin-bottom: 10px">
+                  Eres una persona hermosa, pero lo que más me fascina de ti es
+                  lo <b>dedicada, estudiosa y trabajadora</b> que eres.
+                </p>
+
+                <p style="margin-bottom: 10px">
+                  Me haría mucha ilusión pasar un rato contigo fuera de las
+                  pantallas y quiero que sepas que siempre estaré aquí para apoyarte.
+                </p>
+
+                <p style="font-weight: bold; color: #ff477e;">
+                  ¿Qué dices? ✨🌹
+                </p>
+
+                <a href="https://m.me/estiven.cardoso.98" target="_blank" class="messenger-btn">
+                  Responder en Messenger 💬
+                </a>
+
+              </div>
             </div>
+
+          </div>
         </div>
+      </div>
     </div>
 
-    <script>
-        const btnNo = document.getElementById("btn-no");
-        const btnYes = document.getElementById("btn-yes");
-        const gameContainer = document.getElementById("game-container");
-        const letterContainer = document.getElementById("letter-container");
-        const envelopeWrapper = document.querySelector(".envelope-wrapper");
-        const letter = document.querySelector(".letter");
+<script>
+const btnNo = document.getElementById("btn-no");
+const btnYes = document.getElementById("btn-yes");
+const gameContainer = document.getElementById("game-container");
+const letterContainer = document.getElementById("letter-container");
+const envelopeWrapper = document.querySelector(".envelope-wrapper");
+const letter = document.querySelector(".letter");
 
-        // Función para mover el botón NO
-        function moveButton() {
-            const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
-            const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
-            btnNo.style.position = "fixed";
-            btnNo.style.left = x + "px";
-            btnNo.style.top = y + "px";
-        }
+btnNo.addEventListener("mouseover", () => {
+  const x = Math.random() * (window.innerWidth - btnNo.offsetWidth);
+  const y = Math.random() * (window.innerHeight - btnNo.offsetHeight);
+  btnNo.style.position = "absolute";
+  btnNo.style.left = x + "px";
+  btnNo.style.top = y + "px";
+});
 
-        btnNo.addEventListener("mouseover", moveButton);
-        btnNo.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            moveButton();
-        });
+btnYes.addEventListener("click", () => {
+  gameContainer.style.opacity = "0";
+  setInterval(createHeart, 300);
+  setTimeout(() => {
+    gameContainer.style.display = "none";
+    letterContainer.style.display = "flex";
+    setTimeout(() => { letterContainer.style.opacity = "1"; }, 100);
+  }, 500);
+});
 
-        btnYes.addEventListener("click", () => {
-            gameContainer.style.opacity = "0";
-            setInterval(createHeart, 300);
-            setTimeout(() => {
-                gameContainer.style.display = "none";
-                letterContainer.style.display = "flex";
-                setTimeout(() => { letterContainer.style.opacity = "1"; }, 100);
-            }, 500);
-        });
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".heart") || e.target.closest(".envelope")) {
+    if (!envelopeWrapper.classList.contains("flap")) {
+      envelopeWrapper.classList.add("flap");
+      setTimeout(() => { letter.classList.add("opened"); }, 600);
+    } else {
+      letter.classList.remove("opened");
+      setTimeout(() => { envelopeWrapper.classList.remove("flap"); }, 500);
+    }
+  }
+});
 
-        // Abrir/Cerrar sobre al tocar el corazón o el sobre
-        document.addEventListener("click", (e) => {
-            if (e.target.closest(".heart") || e.target.closest(".envelope")) {
-                if (!envelopeWrapper.classList.contains("flap")) {
-                    envelopeWrapper.classList.add("flap");
-                    setTimeout(() => { letter.classList.add("opened"); }, 400);
-                } else {
-                    letter.classList.remove("opened");
-                    setTimeout(() => { envelopeWrapper.classList.remove("flap"); }, 400);
-                }
-            }
-        });
+function createHeart() {
+  const heart = document.createElement("div");
+  heart.classList.add("heart-fall");
+  heart.innerHTML = "❤";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = Math.random() * 3 + 2 + "s";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  document.body.appendChild(heart);
+  setTimeout(() => { heart.remove(); }, 5000);
+}
+</script>
 
-        function createHeart() {
-            const heart = document.createElement("div");
-            heart.classList.add("heart-fall");
-            heart.innerHTML = "❤";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = Math.random() * 2 + 2 + "s";
-            heart.style.fontSize = Math.random() * 15 + 15 + "px";
-            document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 4000);
-        }
-    </script>
-</body>
+  </body>
 </html>
