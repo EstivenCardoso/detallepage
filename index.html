@@ -31,7 +31,8 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100svh; /* FIX móvil */
+  padding: 20px 10px 40px;
   font-family: "Segoe UI", sans-serif;
   overflow-x: hidden;
 }
@@ -171,7 +172,6 @@ body {
   font-size: 14px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.2);
   transition: all 0.4s ease;
-
   opacity: 0;
   transform: translateY(20px) scale(0.9);
   pointer-events: none;
@@ -186,7 +186,6 @@ body {
 
 .messenger-btn:hover {
   transform: scale(1.08);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 /* -------- CORAZÓN SOBRE -------- */
@@ -243,10 +242,8 @@ body {
 }
 
 @keyframes fall {
-  to { transform: translateY(110vh) rotate(360deg); }
+  to { transform: translateY(110svh) rotate(360deg); }
 }
-
-/* -------- LATIDO BOTÓN -------- */
 
 @keyframes heartbeat {
   0% { transform: scale(1); }
@@ -256,14 +253,9 @@ body {
   100% { transform: scale(1); }
 }
 
-/* -------- RESPONSIVE -------- */
+/* -------- FIX RESPONSIVE REAL -------- */
 
 @media screen and (max-width: 450px) {
-
-  body {
-    height: auto;
-    padding: 20px 0;
-  }
 
   #game-container h1 {
     font-size: 2rem;
@@ -272,22 +264,23 @@ body {
 
   .container,
   .envelope {
-    width: 300px;
+    width: 92vw;
+    max-width: 360px;
+  }
+
+  .envelope::before {
+    border-right: 46vw solid transparent;
+    border-left: 46vw solid transparent;
+    border-top: 140px solid var(--envelope-tab);
   }
 
   .letter {
-    width: 280px;
-    padding: 10px;
-  }
-
-  .letter .text {
-    font-size: 14px;
-    padding: 10px;
+    width: 88%;
+    left: 6%;
   }
 
   .letter.opened {
-    transform: translateY(-180px);
-    min-height: auto;
+    transform: translateY(-120px);
   }
 }
 
